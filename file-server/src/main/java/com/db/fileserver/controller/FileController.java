@@ -1,6 +1,6 @@
 package com.db.fileserver.controller;
 
-import com.db.fileserver.service.FileUploadService;
+import com.db.fileserver.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Sanjeev on 09-07-2022
@@ -26,10 +27,10 @@ import java.util.Optional;
 @RestController
 public class FileController {
 
-    private FileUploadService fileUploadService;
+    private final FileService fileService;
 
-    public FileController(FileUploadService fileUploadService) {
-        this.fileUploadService = fileUploadService;
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
     }
 
     @Autowired
@@ -38,14 +39,9 @@ public class FileController {
 
     //@PostMapping(value = "/files", consumes = {MediaType.APPLICATION_PDF_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @PostMapping("/files")
-    public ResponseEntity uploadFiles(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile[] file) throws IOException, ExecutionException, InterruptedException {
 
-        Optional<String> optionalUsername = getLoggedInUsername();
-        if (optionalUsername.isEmpty()) {
-            throw new UsernameNotFoundException(environment.getProperty("user.not.found"));
-        }
-
-        fileUploadService.uploadFile(Arrays.asList(file), optionalUsername.get());
+        fileService.storeFile(Arrays.asList(file));
 
         return ResponseEntity.ok(environment.getProperty("file.upload.success"));
     }
@@ -61,16 +57,6 @@ public class FileController {
     }*/
 
 
-    private Optional<String> getLoggedInUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
 
-        return Optional.ofNullable(username);
-    }
 
 }

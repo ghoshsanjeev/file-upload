@@ -5,6 +5,8 @@ import com.db.fileserver.entity.User;
 import com.db.fileserver.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -43,4 +45,15 @@ public class UserService {
         return optionalUser.get();
     }
 
+    public Optional<String> getLoggedInUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        return Optional.ofNullable(username);
+    }
 }
