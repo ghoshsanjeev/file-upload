@@ -13,7 +13,8 @@ import {
   RemoveFileIcon,
   InputLabel,
   DocPreview,
-  SelectFileBtn
+  SelectFileBtn,
+  LabelText
 } from "./file-upload.styles";
 
 const KILO_BYTES_PER_BYTE = 1000;
@@ -74,7 +75,7 @@ const FileUpload = ({
     <>
       <FileUploadContainer>
         <InputLabel>{label}</InputLabel>
-
+        <DragDropText>Drag and drop your files anywhere or</DragDropText>
         <SelectFileBtn type="button" onClick={handleUploadBtnClick}>
           <span> Select {otherProps.multiple ? "files" : "a file"}</span>
         </SelectFileBtn>
@@ -88,7 +89,7 @@ const FileUpload = ({
         />
       </FileUploadContainer>
       <FilePreviewContainer>
-        <span>To Upload</span>
+        <LabelText>To Upload</LabelText>
         <PreviewList>
           {Object.keys(files).map((fileName, index) => {
             let file = files[fileName];

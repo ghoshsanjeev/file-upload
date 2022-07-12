@@ -12,6 +12,14 @@ export const FileUploadContainer = styled.section`
   background-color: white;
 `;
 
+export const UploadButtonContainer = styled.section`
+position: relative;
+border-radius: 6px;
+display: flex;
+flex-direction: row-reverse;
+background-color: white;
+`;
+
 export const FormField = styled.input`
   font-size: 18px;
   display: block;
@@ -30,9 +38,9 @@ export const FormField = styled.input`
   }
 `;
 
-export const InputLabel = styled.label`
-  top: -21px;
-  font-size: 13px;
+export const InputLabel = styled.p`
+  top: -18px;
+  letter-spacing: 2.2px;
   color: black;
   left: 0;
   position: absolute;
@@ -43,6 +51,12 @@ export const DragDropText = styled.p`
   letter-spacing: 2.2px;
   margin-top: 0;
   text-align: center;
+`;
+
+export const LabelText = styled.p`
+  letter-spacing: 2.2px;
+  margin-top: 0;
+  text-align: left;
 `;
 
 export const SelectFileBtn = styled.button`
@@ -213,8 +227,6 @@ export const UploadFileBtn = styled.button`
     pointer-events: none;
   }
 `;
-
-
 
 
 export const FilePreviewContainer = styled.article`
