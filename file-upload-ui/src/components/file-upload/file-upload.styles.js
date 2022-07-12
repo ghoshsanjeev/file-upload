@@ -58,7 +58,13 @@ export const LabelText = styled.p`
   margin-top: 0;
   text-align: left;
 `;
-
+export const InputTextArea = styled.textarea`
+  position: relative;  
+  box-sizing: border-box;
+  rows: 3;
+  cols: 100;
+  required: true;
+`
 export const SelectFileBtn = styled.button`
   box-sizing: border-box;
   appearance: none;

@@ -1,10 +1,8 @@
 import React, { useRef, useState } from "react";
-import DocViewer from "react-doc-viewer";
 import {
   FileUploadContainer,
   FormField,
   DragDropText,
-  UploadFileBtn,
   FilePreviewContainer,
   ImagePreview,
   PreviewContainer,
@@ -12,7 +10,6 @@ import {
   FileMetaData,
   RemoveFileIcon,
   InputLabel,
-  DocPreview,
   SelectFileBtn,
   LabelText
 } from "./file-upload.styles";
@@ -74,10 +71,10 @@ const FileUpload = ({
   return (
     <>
       <FileUploadContainer>
-        <InputLabel>{label}</InputLabel>
+        {/* <InputLabel>{label}</InputLabel> */}
         <DragDropText>Drag and drop your files anywhere or</DragDropText>
         <SelectFileBtn type="button" onClick={handleUploadBtnClick}>
-          <span> Select {otherProps.multiple ? "files" : "a file"}</span>
+          <span> Click here to select {otherProps.multiple ? "files" : "a file"}</span>
         </SelectFileBtn>
         <FormField
           type="file"

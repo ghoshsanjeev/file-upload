@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FileUpload from "./components/file-upload/file-upload.component";
-import { UploadButtonContainer, UploadFileBtn } from "./components/file-upload/file-upload.styles";
+import { FileUploadContainer, InputLabel, InputTextArea, LabelText, UploadButtonContainer, UploadFileBtn } from "./components/file-upload/file-upload.styles";
 
 function App() {
   const [newFiles, setNewFiles] = useState({
@@ -29,14 +29,19 @@ function App() {
           multiple
           updateFilesCb={updateUploadedFiles}
         />
+
+        <LabelText>Comment:</LabelText>
+        <InputTextArea rows={4} cols={100} style={{fontSize: 18, color:"blue"}}/>
+
         <UploadButtonContainer>
           <UploadFileBtn type="submit">
             <i className="fas fa-file-upload" />
             <span>Upload</span>
           </UploadFileBtn>
         </UploadButtonContainer>
+
       </form>
-    </div>
+    </div >
   );
 }
 
