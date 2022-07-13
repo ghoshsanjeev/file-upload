@@ -4,6 +4,7 @@ services:
 
   db:
     image: mysql:5.7
+    env_file: ./.env
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
@@ -17,19 +18,25 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8081:8080
+      - 8082:8080
   backend:
+    env_file: ./.env
+    # command: './wait-for db:3306 -- echo "Service: db is up"'
     restart: unless-stopped
     depends_on:
       - db
-    build: file-server
+    image: file-server:0.1
+    build: 
+      context: file-server
+      dockerfile: backend.Dockerfile
     ports:
-      - 8082:9090
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
     expose:
       - "9090"
     environment:
       SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mysql://db:3306/filedb?autoReconnect=true&useSSL=false",
-        "spring.datasource.username" : "root",
-        "spring.datasource.password" : "root"
+        "server.port" : 9090,
+        "spring.datasource.url"  : "jdbc:mysql://db:3306/$MYSQLDB_DATABASE?autoReconnect=true&useSSL=false",
+        "spring.datasource.username" : "$MYSQLDB_USER",
+        "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD"
       }'
