@@ -35,9 +35,9 @@ public class FileController {
 
     //@PostMapping(value = "/files", consumes = {MediaType.APPLICATION_PDF_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @PostMapping("/files")
-    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile[] file) throws IOException, ExecutionException, InterruptedException {
+    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile[] file, String comment) throws IOException, ExecutionException, InterruptedException {
 
-        fileService.storeFile(Arrays.asList(file));
+        fileService.storeFile(Arrays.asList(file), comment);
 
         return ResponseEntity.ok(environment.getProperty("file.upload.success"));
     }
@@ -51,8 +51,6 @@ public class FileController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }*/
-
-
 
 
 }

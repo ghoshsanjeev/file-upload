@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
 
 /**
  * @author Sanjeev on 09-07-2022
@@ -20,8 +23,7 @@ import java.io.File;
 public class UserFile {
 
     public UserFile(String path) {
-        File file = new File(path);
-        this.filePath = file.getAbsolutePath();
+        setFilePath(path);
     }
 
     @Id
@@ -36,11 +38,21 @@ public class UserFile {
     private String filePath;
     @Column
     private String fileExtension;
-    @Column(name="file_size_in_mb")
+    @Column(name = "file_size_in_mb")
     private Double fileSizeInMB;
+    @Column
+    private String comment;
+    @Column
+    private LocalDateTime uploadedOn;
 
     public void setFilePath(String filePath) {
         File file = new File(filePath);
         this.filePath = file.getAbsolutePath();
+    }
+
+    public void setFileSizeInMB(Double fileSizeInMB) {
+        this.fileSizeInMB = BigDecimal.valueOf(fileSizeInMB)
+                .setScale(3, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

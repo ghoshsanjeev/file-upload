@@ -20,6 +20,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,11 +57,14 @@ public class FileService {
     private long getFileOrDirSize(String path) {
         long size;
         File file = new File(path);
-        if (file.isDirectory())
-            size = FileUtils.sizeOfDirectory(file);
-        else
-            size = FileUtils.sizeOf(file);
-
+        if (file.exists()) {
+            if (file.isDirectory())
+                size = FileUtils.sizeOfDirectory(file);
+            else
+                size = FileUtils.sizeOf(file);
+        } else {
+            size = 0;
+        }
         return size;
     }
 
@@ -81,6 +85,7 @@ public class FileService {
     }
 
     public Future<Double> getUploadStorageSizeInMB() {
+
         CompletableFuture<Double> calculateSize = new CompletableFuture<>();
         Executors.newCachedThreadPool().submit(() -> {
             calculateSize.complete(getFileOrDirSizeInMB(fileUploadDir));
@@ -89,7 +94,7 @@ public class FileService {
         return calculateSize;
     }
 
-    public void storeFile(List<MultipartFile> multipartFiles) throws IOException, ExecutionException, InterruptedException {
+    public void storeFile(List<MultipartFile> multipartFiles, String comment) throws IOException, ExecutionException, InterruptedException {
 
         Optional<String> optionalUsername = userService.getLoggedInUsername();
         if (optionalUsername.isEmpty()) {
@@ -102,7 +107,7 @@ public class FileService {
         User uploader = userService.findByUsername(username);
 
         for (MultipartFile multipartFile : multipartFiles) {
-            UserFile file = prepareFileForStoring(multipartFile, uploader);
+            UserFile file = prepareFileForStoring(multipartFile, uploader, comment);
             copyFileToLocation(multipartFile, file.getFilePath());
             files.add(file);
         }
@@ -110,7 +115,7 @@ public class FileService {
         userFileRepo.saveAll(files);
     }
 
-    private UserFile prepareFileForStoring(MultipartFile multipartFile, User uploader) throws ExecutionException, InterruptedException {
+    private UserFile prepareFileForStoring(MultipartFile multipartFile, User uploader, String comment) throws ExecutionException, InterruptedException {
         Future<Double> storageSizeInMBFuture = getUploadStorageSizeInMB();
         String fileName = multipartFile.getOriginalFilename();
         UserFile file = new UserFile(fileUploadDir + File.separator + multipartFile.getOriginalFilename());
@@ -118,9 +123,11 @@ public class FileService {
         file.setFileExtension(FilenameUtils.getExtension(fileName));
         file.setUploader(uploader);
         file.setFileSizeInMB(getMultipartFileSizeInMB(multipartFile));
+        file.setComment(comment);
+        file.setUploadedOn(LocalDateTime.now());
 
         while (!storageSizeInMBFuture.isDone()) {
-            //log.debug("Calculating size of storage...");
+            log.debug("Calculating size of storage...");
         }
 
         if (storageSizeInMBFuture.isDone()) {

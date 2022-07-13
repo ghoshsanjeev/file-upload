@@ -19,7 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors()
                 .and().csrf().disable()
-                .authorizeHttpRequests((authz) -> authz
+                .authorizeHttpRequests((auth) -> auth
                         .anyRequest().authenticated())
                 //.httpBasic(withDefaults());
                 .httpBasic();
@@ -37,4 +37,6 @@ public class SecurityConfig {
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
+
+
 }
