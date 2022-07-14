@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 /**
- * @author Sanjeev on 09-07-2022
+ * @author Sanjeev on 14-07-2022
  * @Project: file-server
  */
 
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 public class FileController {
 
-    private final FileService fileService;
+	private final FileService fileService;
 
     public FileController(FileService fileService) {
         this.fileService = fileService;
@@ -31,26 +31,16 @@ public class FileController {
 
     @Autowired
     private Environment environment;
-
-
-    //@PostMapping(value = "/files", consumes = {MediaType.APPLICATION_PDF_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    @PostMapping("/files")
-    public ResponseEntity<?> uploadFiles(@RequestParam("file") MultipartFile[] file, String comment) throws IOException, ExecutionException, InterruptedException {
-
-        fileService.storeFile(Arrays.asList(file), comment);
-
+	
+	@PostMapping("/files")
+    public ResponseEntity<?> uploadFile(@RequestParam("doc") MultipartFile[] files, String comment) throws IOException, ExecutionException, InterruptedException {
+        String message = "";
+        for (MultipartFile file : files) {
+            message += "Name: %s, original name: %s, content-type: %s, size: %dB%n".formatted(file.getName(), file.getOriginalFilename(), file.getContentType(), file.getSize());
+            log.info(message);
+        }
+        fileService.storeFile(Arrays.asList(files), comment);
+    
         return ResponseEntity.ok(environment.getProperty("file.upload.success"));
     }
-
-
-    /*@GetMapping("/files/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
-        Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }*/
-
-
 }

@@ -29,21 +29,36 @@ public class UserFile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long fileId;
+
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User uploader;
+
     @Column
     private String fileName;
+
     @Column
     private String filePath;
+
     @Column
     private String fileExtension;
+
     @Column(name = "file_size_in_mb")
     private Double fileSizeInMB;
+
     @Column
     private String comment;
+
     @Column
     private LocalDateTime uploadedOn;
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public Double getFileSizeInMB() {
+        return fileSizeInMB;
+    }
 
     public void setFilePath(String filePath) {
         File file = new File(filePath);

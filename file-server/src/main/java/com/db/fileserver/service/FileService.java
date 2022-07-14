@@ -128,6 +128,7 @@ public class FileService {
 
         while (!storageSizeInMBFuture.isDone()) {
             log.debug("Calculating size of storage...");
+            Thread.sleep(100);
         }
 
         if (storageSizeInMBFuture.isDone()) {
