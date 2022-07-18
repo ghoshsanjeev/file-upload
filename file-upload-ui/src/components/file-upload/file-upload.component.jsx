@@ -9,7 +9,6 @@ import {
   PreviewList,
   FileMetaData,
   RemoveFileIcon,
-  InputLabel,
   SelectFileBtn,
   LabelText
 } from "./file-upload.styles";

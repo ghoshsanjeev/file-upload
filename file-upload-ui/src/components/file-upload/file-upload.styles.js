@@ -61,9 +61,11 @@ export const LabelText = styled.p`
 export const InputTextArea = styled.textarea`
   position: relative;  
   box-sizing: border-box;
-  rows: 3;
-  cols: 100;
   required: true;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 6px;
 `
 export const SelectFileBtn = styled.button`
   box-sizing: border-box;
@@ -169,7 +171,7 @@ export const UploadFileBtn = styled.button`
   z-index: 1;
   transition: color 250ms ease-in-out;
   font-family: "Open Sans", sans-serif;
-  width: 10%;
+  width: 8%;
   display: flex;
   align-items: center;
   padding-right: 0;
